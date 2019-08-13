@@ -1,0 +1,200 @@
+﻿<!--
+//*********************************************************
+//
+// Copyright (c) Microsoft. All rights reserved.
+// THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
+// ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
+// IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
+// PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
+//
+//*********************************************************
+-->
+<Window x:Class="WinAppDriverUIRecorder.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WinAppDriverUIRecorder"
+        mc:Ignorable="d"
+        Loaded="Window_Loaded"
+        Closed="Window_Closed"
+        MouseEnter="Window_MouseEnter"
+        MouseLeave="Window_MouseLeave"
+        Title="WAD UIRecorder" Height="871.197" Width="602.819">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="30" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid  Name="gridXPath">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height= "{Binding TabCodeHeight}" />
+                    <RowDefinition Height="30" />
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <RichTextBox IsReadOnly="True"  Name="rtbXPath" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" MouseEnter="rtbXPath_MouseEnter" TextChanged="RtbXPath_TextChanged" >
+                        <RichTextBox.ToolTip>
+                            <ToolTip>
+                                <TextBlock Name="rtbXPath_ToolTip" Text= "xpath for recorded UI" />
+                            </ToolTip>
+                        </RichTextBox.ToolTip>
+                        <RichTextBox.ContextMenu>
+                            <ContextMenu Name="MenuXPathTextBox">
+                                <MenuItem Header="Copy Full XPath" Click="MenuCopyFullPath"/>
+                                <MenuItem Header="Copy XPath Excluding Session Path" Click="MenuCopyPathWithoutSessionPath"/>
+                                <MenuItem Header="Clear Session Path" Click="MenuClearSessionPath"/>
+                            </ContextMenu>
+                        </RichTextBox.ContextMenu>
+                    </RichTextBox>
+                </Grid>
+                <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Background="Azure"/>
+                <Grid Grid.Row="2">
+                    <TabControl Name="tabControl" Margin="0,0,-0.2,92.6">
+                        <TabItem>
+                            <TabItem.Header>
+                                <Label Content="Recorded UI" HorizontalAlignment="Stretch"/>
+                            </TabItem.Header>
+                            <TreeView Name="treeUiPath" HorizontalContentAlignment="Center" 
+                                       VerticalContentAlignment="Center" 
+                                       SelectedItemChanged="treeUiPath_SelectedItemChanged" Margin="0,0,0.2,11.4">
+
+                                <TreeView.ItemContainerStyle>
+                                    <Style TargetType="{x:Type TreeViewItem}">
+                                        <Setter Property="TreeViewItem.IsExpanded" Value="True"/>
+                                    </Style>
+                                </TreeView.ItemContainerStyle>
+                                <TreeView.ItemTemplate>
+                                    <HierarchicalDataTemplate DataType="{x:Type local:UiTreeNode}" ItemsSource="{Binding Items}">
+                                        <TextBlock Text="{Binding Title}" ToolTipService.ToolTip="{Binding Title,Mode=TwoWay}" />
+                                    </HierarchicalDataTemplate>
+                                </TreeView.ItemTemplate>
+
+                                <TreeView.Resources>
+                                    <ContextMenu x:Key ="UiNode"  StaysOpen="true">
+                                        <MenuItem Header="Highlight"  Click="Highlight_Click"/>
+                                        <MenuItem Header="Edit Attributes"  Click="EditAttribute_Click"/>
+                                        <MenuItem Header="Set as Session Path"  Click="SetSessionRoot_Click"/>
+                                    </ContextMenu>
+                                    <ContextMenu x:Key="LeafNode"  StaysOpen="true">
+                                        <MenuItem Header="Highlight"  Click="Highlight_Click"/>
+                                        <MenuItem Header="Edit Attributes"  Click="EditAttribute_Click"/>
+                                        <MenuItem Header="Remove"/>
+                                    </ContextMenu>
+                                </TreeView.Resources>
+
+                            </TreeView>
+                        </TabItem>
+                        <TabItem Name="tabItemCode">
+                            <TabItem.Header>
+                                <Label Content="Code" HorizontalAlignment="Stretch"/>
+                            </TabItem.Header>
+                            <TextBox Name="textBoxCode" TextWrapping="Wrap" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" MouseEnter="textBoxCode_MouseEnter" TextChanged="TextBoxCode_TextChanged">
+                                <TextBox.ToolTip>
+                                    <ToolTip>
+                                        <TextBlock Name="textBoxCode_ToolTip" Text= "C# code for recorded UI" />
+                                    </ToolTip>
+                                </TextBox.ToolTip>
+                            </TextBox>
+                        </TabItem>
+                        <TabItem>
+                            <TabItem.Header>
+                                <Label Content="Recorede Steps"/>
+
+                            </TabItem.Header>
+                            <DataGrid Height="250" Width="580" Margin="3,0,288.2,0" ItemsSource="{Binding Source=stepsList}"  AutoGenerateColumns="False">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="ID" Binding="{Binding ID}"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </TabItem>
+
+
+                    </TabControl>
+                    <TextBox Name="txtAppAddress" HorizontalAlignment="Left" Height="21" Margin="10,310,0,0" TextWrapping="Wrap" Text="C:\Program Files (x86)\CRHM\CRHM.exe" VerticalAlignment="Top" Width="239"/>
+                    <TextBox Name="txtReportsPath" HorizontalAlignment="Left" Height="21" Margin="10,349,0,0" TextWrapping="Wrap" Text="C:\Test\" VerticalAlignment="Top" Width="239"/>
+                </Grid>
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="30" />
+                        <ColumnDefinition Width="30" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Grid.Column="0">
+                        <ComboBox Name="comboBoxRecordedUi" SelectionChanged="comboBoxRecordedUi_SelectionChanged" Margin="0,0,0,0"
+                                  Background="Ivory" MouseEnter="comboBoxRecordedUi_MouseEnter"
+                                  PreviewMouseLeftButtonDown="ComboBoxRecordedUi_PreviewMouseLeftButtonDown">
+                            <ComboBox.ToolTip>
+                                <ToolTip>
+                                    <TextBlock Name="comboBoxRecordedUi_ToolTip" Text= "xpath for recorded UI" />
+                                </ToolTip>
+                            </ComboBox.ToolTip>
+                        </ComboBox>
+                    </Grid>
+                    <Grid Grid.Column="1">
+                        <Button Name="btnWinAppDriverCode" Click="btnWinAppDriverCode_Click">
+                            <Button.ToolTip>
+                                <ToolTip>
+                                    <TextBlock Name="toolTipText" Text= "Generate and copy C# code to Clipboard" />
+                                </ToolTip>
+                            </Button.ToolTip>
+                            <Button.Content>
+                                <Image Source="Resource/copy.png"/>
+                            </Button.Content>
+                        </Button>
+                    </Grid>
+                    <Grid Grid.Column="2">
+                        <Button Name="btnDelete"  Content="-" FontSize="22" Click="btnDelete_Click">
+                            <Button.ToolTip>
+                                <ToolTip>
+                                    <TextBlock Name="toolTipDelete" Text= "Delete selected UI task" />
+                                </ToolTip>
+                            </Button.ToolTip>
+                        </Button>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="75" />
+                <ColumnDefinition Width="75" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+                <ToggleButton Content="Start" Name="btnRecord" Click="btnRecord_Click" IsThreeState="False" Margin="1,0,1.2,1.4"
+                        ToolTip="Record UI interaction (Please wait for flashing rect before each mouse click)" Checked="BtnRecord_Checked" Height="28" VerticalAlignment="Bottom">
+                    <ToggleButton.Template>
+                        <ControlTemplate TargetType="{x:Type ToggleButton}">
+                            <Border CornerRadius="3" Background="{TemplateBinding Background}">
+                                <ContentPresenter Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </ToggleButton.Template>
+                </ToggleButton>
+            </Grid>
+
+            <Grid Grid.Column="1">
+                <ToggleButton Content="Clear" Name="btnClear" Click="btnClear_Click" IsThreeState="False" Margin="1,1,1.2,1.4"
+                        ToolTip="Clear all recorded UI tasks">
+                    <ToggleButton.Template>
+                        <ControlTemplate TargetType="{x:Type ToggleButton}">
+                            <Border CornerRadius="3" Background="{TemplateBinding Background}">
+                                <ContentPresenter Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </ToggleButton.Template>
+                </ToggleButton>
+            </Grid>
+            <Grid Grid.Column="2"  Background="White" Name="gridTextRecording">
+                <TextBlock Name="textBoxRecording" HorizontalAlignment="Center" VerticalAlignment="Center" Text="" FontWeight="Bold" Margin="0,0,0,0"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

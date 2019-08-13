@@ -1,0 +1,60 @@
+#Visual Studio files
+*.o
+*.d
+*.so
+*.[Oo]bj
+*.user
+*.aps
+*.pch
+*.vspscc
+*.vssscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.tli
+*.bak
+*.[Cc]ache
+*.ilk
+*.log
+*.lib
+*.sbr
+*.sdf
+*.sdf
+*.opensdf
+*.pdb
+*.idb
+*.ipdb
+*.iobj
+*.res
+*.unsuccessfulbuild
+*.lastbuildstate
+*.tlog
+*.intermediate
+*.dll
+*.exp
+*.exe
+*.manifest
+*.rc
+*~
+.vs
+ipch/
+obj/
+[Bb]in
+[Aa]pp[Pp]ackages/
+[Bb]undle[Aa]rtifacts/
+
+#ignore all *.lock.json files
+*.lock.json
+
+# The packages folder can be ignored because of Package Restore
+**/packages/*
+
+# except build/, which is used as an MSBuild target.
+!**/packages/build/
+
+# Visual Studio 2015/2017 cache/options directory
+.vs/
+

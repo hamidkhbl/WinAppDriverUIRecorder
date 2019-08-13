@@ -1,0 +1,8 @@
+LIBRARY
+EXPORTS 
+    SetWindowsHookExNative  PRIVATE
+    UninitializeHook        PRIVATE
+    InitUiTreeWalk          PRIVATE
+    UnInitUiTreeWalk        PRIVATE
+    GetUiXPath              PRIVATE
+    HighlightCachedUI       PRIVATE
